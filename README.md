@@ -16,3 +16,10 @@
 # 支持
 有什么建议欢迎提交GitHub issues
 [Issue](https://github.com/TianLang-Hacker/astrbot_plugin_ipquery/issues)
+
+
+# 更新日志
+
+### Version 0.0.2
+
+- 修复了经纬度错误显示的问题
