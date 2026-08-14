@@ -9,7 +9,7 @@ from .commands.whois import handle_whois
     "ip_query",
     "TianLang Hacker",
     "查询 IP 地理位置和 Whois 域名及类型的插件",
-    "0.0.4",
+    "0.0.5",
 )
 class IPQueryPlugin(Star):
     def __init__(self, context: Context):

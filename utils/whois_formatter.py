@@ -1,10 +1,32 @@
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 
-STATUS_TRANSLATIONS = {
-    "clientTransferProhibited": "禁止转移",
-}
+def _load_status_map() -> dict[str, str]:
+    """读取 WHOIS 状态码汉化表。"""
+    try:
+        import tomllib
+    except ModuleNotFoundError:  # pragma: no cover - Python 3.10 兼容
+        try:
+            import tomli as tomllib
+        except ModuleNotFoundError:
+            return {}
+
+    try:
+        with (Path(__file__).with_name("status_map.toml")).open("rb") as file:
+            mapping = tomllib.load(file)
+    except (OSError, ValueError):
+        return {}
+
+    return {
+        str(status): str(translation)
+        for status, translation in mapping.items()
+        if isinstance(translation, str)
+    }
+
+
+STATUS_MAP = _load_status_map()
 
 
 def _display(value: Any) -> str:
@@ -43,16 +65,19 @@ def _format_date(value: Any) -> str:
 
 
 def _format_status(value: Any) -> str:
+    def translate(status: Any) -> str:
+        displayed = _display(status)
+        return STATUS_MAP.get(displayed, displayed)
+
     if isinstance(value, (list, tuple)):
         if not value:
             return "null"
-        return ", ".join(
-            STATUS_TRANSLATIONS.get(_display(status), _display(status))
-            for status in value
-        )
+        return ", ".join(translate(status) for status in value)
     if isinstance(value, str):
         displayed = _display(value)
-        return STATUS_TRANSLATIONS.get(displayed, displayed)
+        if displayed == "null":
+            return displayed
+        return ", ".join(translate(status.strip()) for status in displayed.split(","))
     return _display(value)
 
 
@@ -121,7 +146,7 @@ def format_backup_whois(data: dict[str, Any]) -> str:
         "WHOIS 查询结果 (备用源：v2.xxapi.cn):\n"
         "------------------\n"
         f"域名: {_field(data, 'domain_name')}\n"
-        f"状态: {_field(data, 'domain_status')}\n"
+        f"状态: {_format_status(data.get('domain_status'))}\n"
         f"注册时间: {_format_date(data.get('registration_time'))}\n"
         f"到期时间: {_format_date(data.get('expiration_time'))}\n"
         f"注册人: {_field(data, 'registrant')}\n"
