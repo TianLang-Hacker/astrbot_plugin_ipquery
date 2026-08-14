@@ -63,7 +63,9 @@ async with httpx.AsyncClient(headers=headers, timeout=8) as client:
 
 ### version 0.0.4
 
-- 新增 `/whois <域名>` 命令，支持主用和备用 WHOIS 查询接口
+- 重构项目代码，方便后续新增功能。
+
+- 新增 /whois 命令，支持查询目标域名的Whois信息，支持主用和备用 Whois 查询接口。用法：`/whois example.com`
 
 ### version 0.0.3
 
