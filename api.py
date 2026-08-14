@@ -18,6 +18,20 @@ IP_APIS = [
     },
 ]
 
+# WHOIS 查询 API 配置，按列表顺序依次尝试
+WHOIS_APIS = [
+    {
+        "name": "who-dat.as93.net",
+        "url": "https://who-dat.as93.net/{}",
+        "type": "primary",
+    },
+    {
+        "name": "v2.xxapi.cn",
+        "url": "https://v2.xxapi.cn/api/whois?domain={}",
+        "type": "backup",
+    },
+]
+
 # HTTP 请求头
 HEADERS = {
     "User-Agent": (
@@ -40,4 +54,9 @@ USE_SYSTEM_PROXY = True
 ALL_API_FAILED_MESSAGE = (
     "❌ 所有查询接口均已失效或达到频率上限。\n"
     "💡 建议：请稍后再试，或检查此查询目标是否已被 API 服务商限制。"
+)
+
+WHOIS_ALL_API_FAILED_MESSAGE = (
+    "❌ 所有 WHOIS 查询接口均已失效或达到频率上限。\n"
+    "💡 建议：请稍后再试，或检查此域名是否有效。"
 )

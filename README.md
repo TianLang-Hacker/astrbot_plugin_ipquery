@@ -1,6 +1,6 @@
 # IP Query
 
-一个用于查询 IP、IPv6 或域名地理位置及类型的插件
+一个用于查询 IP、IPv6 或域名地理位置及类型，以及查询域名 WHOIS 信息的插件
 
 ---
 
@@ -18,6 +18,12 @@
 - `/ip 2400:3200::1`
 - `/ip example.com`
 
+使用 `/whois <域名>` 查询域名 WHOIS 信息，主用 `who-dat.as93.net` 不可用时会自动切换到 `v2.xxapi.cn`。
+
+示例：
+
+- `/whois example.com`
+
 ## 支持
 
 有什么建议欢迎提交 [Github Issue](https://github.com/TianLang-Hacker/astrbot_plugin_ipquery/issues)
@@ -31,6 +37,8 @@ rules:
   - DOMAIN-SUFFIX,ip-api.com,DIRECT # 用于 ip-api.com 直连 IP
   - DOMAIN-SUFFIX,is.snappytree.com,DIRECT # 用于 ip-api.com镜像源直连 IP
   - DOMAIN-SUFFIX,ipapi.co,DIRECT # 用于 ipapi.co 直连 IP
+  - DOMAIN-SUFFIX,who-dat.as93.net,DIRECT # 用于 who-dat.as93.net 直连 WHOIS
+  - DOMAIN-SUFFIX,xxapi.cn,DIRECT # 用于 xxapi.cn 直连 WHOIS
 ```
 
 - 如果使用的是其他代理工具建议自行寻找直连方法，核心逻辑就是将以下API URL加入白名单或者设置直连规则即可
@@ -39,6 +47,8 @@ rules:
 ip-api.com
 is.snappytree.com
 ipapi.co
+who-dat.as93.net
+xxapi.cn
 ```
 
 - 当然不妨就是有人喜欢用代理 IP 使用此服务，在 /AstrBot/data/plugins/astrbot_plugin_ipquery/main.py 第41行删除trust_env=True即可
@@ -53,7 +63,7 @@ async with httpx.AsyncClient(headers=headers, timeout=8) as client:
 
 ### version 0.0.4
 
-- 去除了仅允许 IPv4 的本地校验，支持直接查询域名和 IPv6
+- 新增 `/whois <域名>` 命令，支持主用和备用 WHOIS 查询接口
 
 ### version 0.0.3
 
